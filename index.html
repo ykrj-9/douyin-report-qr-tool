@@ -453,7 +453,7 @@ https://v.douyin.com/zzysqsjzbdr/
 
 
 <script
-  src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js">
+  src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js">
 </script>
 
 
@@ -848,39 +848,17 @@ generateButton
       生成 QR
       */
 
-      const QRBox =
-        document.querySelector(
-          "#qrcode"
-        );
+      const QRBox = document.querySelector("#qrcode");
 
+QRBox.innerHTML = "";
 
-      QRBox.innerHTML = "";
+const qr = qrcode(0, "M");
 
+qr.addData(finalURL);
 
-      const canvas =
-        document.createElement(
-          "canvas"
-        );
+qr.make();
 
-
-      QRBox.appendChild(
-        canvas
-      );
-
-
-      await QRCode.toCanvas(
-
-        canvas,
-
-        finalURL,
-
-        {
-          width: 220,
-          margin: 1,
-          errorCorrectionLevel: "M"
-        }
-
-      );
+QRBox.innerHTML = qr.createImgTag(6, 4);
 
 
 
@@ -998,37 +976,32 @@ document.querySelector(
   "click",
   () => {
 
-    const canvas =
-      document.querySelector(
-        "#qrcode canvas"
-      );
+    document.querySelector("#saveQR")
+.addEventListener("click", async () => {
 
+  const img = document.querySelector("#qrcode img");
 
-    if (!canvas) {
-      return;
-    }
-
-
-    const link =
-      document.createElement(
-        "a"
-      );
-
-
-    link.href =
-      canvas.toDataURL(
-        "image/png"
-      );
-
-
-    link.download =
-      "douyin-qr.png";
-
-
-    link.click();
-
+  if (!img) {
+    return;
   }
-);
+
+  const response = await fetch(img.src);
+
+  const blob = await response.blob();
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+
+  link.download = "douyin-qr.png";
+
+  link.click();
+
+  URL.revokeObjectURL(url);
+
+});
 
 </script>
 
