@@ -969,14 +969,7 @@ document.querySelector(
 =========================================
 */
 
-document.querySelector(
-  "#saveQR"
-)
-.addEventListener(
-  "click",
-  () => {
-
-    document.querySelector("#saveQR")
+document.querySelector("#saveQR")
 .addEventListener("click", async () => {
 
   const img = document.querySelector("#qrcode img");
@@ -985,25 +978,33 @@ document.querySelector(
     return;
   }
 
-  const response = await fetch(img.src);
+  try {
 
-  const blob = await response.blob();
+    const response = await fetch(img.src);
 
-  const url = URL.createObjectURL(blob);
+    const blob = await response.blob();
 
-  const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
 
-  link.href = url;
+    const link = document.createElement("a");
 
-  link.download = "douyin-qr.png";
+    link.href = url;
 
-  link.click();
+    link.download = "douyin-qr.png";
 
-  URL.revokeObjectURL(url);
+    link.click();
+
+    URL.revokeObjectURL(url);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
 
 });
 
-</script>
+  </script>
 
 </body>
 </html>
